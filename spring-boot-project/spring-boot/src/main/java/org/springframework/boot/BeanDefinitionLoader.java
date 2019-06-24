@@ -79,12 +79,16 @@ class BeanDefinitionLoader {
 		Assert.notNull(registry, "Registry must not be null");
 		Assert.notEmpty(sources, "Sources must not be empty");
 		this.sources = sources;
+		//注解形式的Bean定义读取器 比如：@Configuration @Bean @Component @Controller @Service等等
 		this.annotatedReader = new AnnotatedBeanDefinitionReader(registry);
+		//XML形式的Bean定义读取器
 		this.xmlReader = new XmlBeanDefinitionReader(registry);
 		if (isGroovyPresent()) {
 			this.groovyReader = new GroovyBeanDefinitionReader(registry);
 		}
+		//类路径扫描器
 		this.scanner = new ClassPathBeanDefinitionScanner(registry);
+		//扫描器添加排除过滤器
 		this.scanner.addExcludeFilter(new ClassExcludeFilter(sources));
 	}
 
@@ -136,15 +140,19 @@ class BeanDefinitionLoader {
 
 	private int load(Object source) {
 		Assert.notNull(source, "Source must not be null");
+		// 从Class加载
 		if (source instanceof Class<?>) {
 			return load((Class<?>) source);
 		}
+		// 从Resource加载
 		if (source instanceof Resource) {
 			return load((Resource) source);
 		}
+		// 从Package加载
 		if (source instanceof Package) {
 			return load((Package) source);
 		}
+		// 从 CharSequence 加载 ？？？
 		if (source instanceof CharSequence) {
 			return load((CharSequence) source);
 		}
@@ -160,6 +168,7 @@ class BeanDefinitionLoader {
 			load(loader);
 		}
 		if (isComponent(source)) {
+			//将 启动类的 BeanDefinition注册进 beanDefinitionMap
 			this.annotatedReader.register(source);
 			return 1;
 		}

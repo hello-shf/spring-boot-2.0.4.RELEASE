@@ -97,6 +97,7 @@ import org.springframework.util.StringUtils;
  * @author Andy Wilkinson
  * @author Eddú Meléndez
  * @author Madhura Bhave
+ * 从默认的位置加载配置文件，并将其加入 上下文的 environment变量中
  */
 public class ConfigFileApplicationListener
 		implements EnvironmentPostProcessor, SmartApplicationListener, Ordered {
